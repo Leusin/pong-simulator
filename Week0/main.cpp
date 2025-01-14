@@ -3,6 +3,7 @@
 #include <windows.h>
 #include "URenderer.h"
 #include "FVertexSimple.h"
+#include "Sphere.h"
 
 extern LRESULT ImGui_ImplWin32_WndProcHandler(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam);
 
@@ -64,6 +65,104 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_  HINSTANCE hPrevInstance, 
 	ImGui_ImplWin32_Init((void*)hWnd);
 	ImGui_ImplDX11_Init(renderer.Device, renderer.DeviceContext);
 
+
+	// Renderer와 Shader 생성 이후에 버텍스 버퍼를 생성합니다.
+	FVertexSimple triangle_vertices[] =
+	{
+		{  0.0f,  1.0f, 0.0f,  1.0f, 0.0f, 0.0f, 1.0f }, // Top vertex (red)
+		{  1.0f, -1.0f, 0.0f,  0.0f, 1.0f, 0.0f, 1.0f }, // Bottom-right vertex (green)
+		{ -1.0f, -1.0f, 0.0f,  0.0f, 0.0f, 1.0f, 1.0f }  // Bottom-left vertex (blue)
+	};
+
+	FVertexSimple cube_vertices[] =
+	{
+		// Front face (Z+)
+		{ -0.5f, -0.5f,  0.5f,  1.0f, 0.0f, 0.0f, 1.0f }, // Bottom-left (red)
+		{ -0.5f,  0.5f,  0.5f,  1.0f, 1.0f, 0.0f, 1.0f }, // Top-left (yellow)
+		{  0.5f, -0.5f,  0.5f,  0.0f, 1.0f, 0.0f, 1.0f }, // Bottom-right (green)
+		{ -0.5f,  0.5f,  0.5f,  1.0f, 1.0f, 0.0f, 1.0f }, // Top-left (yellow)
+		{  0.5f,  0.5f,  0.5f,  0.0f, 0.0f, 1.0f, 1.0f }, // Top-right (blue)
+		{  0.5f, -0.5f,  0.5f,  0.0f, 1.0f, 0.0f, 1.0f }, // Bottom-right (green)
+
+		// Back face (Z-)
+		{ -0.5f, -0.5f, -0.5f,  0.0f, 1.0f, 1.0f, 1.0f }, // Bottom-left (cyan)
+		{  0.5f, -0.5f, -0.5f,  1.0f, 0.0f, 1.0f, 1.0f }, // Bottom-right (magenta)
+		{ -0.5f,  0.5f, -0.5f,  0.0f, 0.0f, 1.0f, 1.0f }, // Top-left (blue)
+		{ -0.5f,  0.5f, -0.5f,  0.0f, 0.0f, 1.0f, 1.0f }, // Top-left (blue)
+		{  0.5f, -0.5f, -0.5f,  1.0f, 0.0f, 1.0f, 1.0f }, // Bottom-right (magenta)
+		{  0.5f,  0.5f, -0.5f,  1.0f, 1.0f, 0.0f, 1.0f }, // Top-right (yellow)
+
+		// Left face (X-)
+		{ -0.5f, -0.5f, -0.5f,  1.0f, 0.0f, 1.0f, 1.0f }, // Bottom-left (purple)
+		{ -0.5f,  0.5f, -0.5f,  0.0f, 0.0f, 1.0f, 1.0f }, // Top-left (blue)
+		{ -0.5f, -0.5f,  0.5f,  0.0f, 1.0f, 0.0f, 1.0f }, // Bottom-right (green)
+		{ -0.5f,  0.5f, -0.5f,  0.0f, 0.0f, 1.0f, 1.0f }, // Top-left (blue)
+		{ -0.5f,  0.5f,  0.5f,  1.0f, 1.0f, 0.0f, 1.0f }, // Top-right (yellow)
+		{ -0.5f, -0.5f,  0.5f,  0.0f, 1.0f, 0.0f, 1.0f }, // Bottom-right (green)
+
+		// Right face (X+)
+		{  0.5f, -0.5f, -0.5f,  1.0f, 0.5f, 0.0f, 1.0f }, // Bottom-left (orange)
+		{  0.5f, -0.5f,  0.5f,  0.5f, 0.5f, 0.5f, 1.0f }, // Bottom-right (gray)
+		{  0.5f,  0.5f, -0.5f,  0.5f, 0.0f, 0.5f, 1.0f }, // Top-left (purple)
+		{  0.5f,  0.5f, -0.5f,  0.5f, 0.0f, 0.5f, 1.0f }, // Top-left (purple)
+		{  0.5f, -0.5f,  0.5f,  0.5f, 0.5f, 0.5f, 1.0f }, // Bottom-right (gray)
+		{  0.5f,  0.5f,  0.5f,  0.0f, 0.0f, 0.5f, 1.0f }, // Top-right (dark blue)
+
+		// Top face (Y+)
+		{ -0.5f,  0.5f, -0.5f,  0.0f, 1.0f, 0.5f, 1.0f }, // Bottom-left (light green)
+		{ -0.5f,  0.5f,  0.5f,  0.0f, 0.5f, 1.0f, 1.0f }, // Top-left (cyan)
+		{  0.5f,  0.5f, -0.5f,  0.5f, 1.0f, 1.0f, 1.0f }, // Bottom-right (white)
+		{ -0.5f,  0.5f,  0.5f,  0.0f, 0.5f, 1.0f, 1.0f }, // Top-left (cyan)
+		{  0.5f,  0.5f,  0.5f,  0.5f, 0.5f, 0.0f, 1.0f }, // Top-right (brown)
+		{  0.5f,  0.5f, -0.5f,  0.5f, 1.0f, 1.0f, 1.0f }, // Bottom-right (white)
+
+		// Bottom face (Y-)
+		{ -0.5f, -0.5f, -0.5f,  0.5f, 0.5f, 0.0f, 1.0f }, // Bottom-left (brown)
+		{ -0.5f, -0.5f,  0.5f,  1.0f, 0.0f, 0.0f, 1.0f }, // Top-left (red)
+		{  0.5f, -0.5f, -0.5f,  1.0f, 0.0f, 0.5f, 1.0f }, // Bottom-right (purple)
+		{ -0.5f, -0.5f,  0.5f,  1.0f, 0.0f, 0.0f, 1.0f }, // Top-left (red)
+		{  0.5f, -0.5f,  0.5f,  0.0f, 1.0f, 0.0f, 1.0f }, // Top-right (green)
+		{  0.5f, -0.5f, -0.5f,  1.0f, 0.0f, 0.5f, 1.0f }, // Bottom-right (purple)
+	};
+
+	// 삼각형
+	/* FVertexSimple* vertices = triangle_vertices;
+	UINT ByteWidth = sizeof(triangle_vertices);
+	UINT numVertices = sizeof(triangle_vertices) / sizeof(FVertexSimple);*/
+
+	// 사각형
+	/*FVertexSimple* vertices = cube_vertices;
+	UINT ByteWidth = sizeof(cube_vertices);
+	UINT numVertices = sizeof(cube_vertices) / sizeof(FVertexSimple);*/
+
+	// 구
+	FVertexSimple* vertices = sphere_vertices;
+	UINT ByteWidth = sizeof(sphere_vertices);
+	UINT numVertices = sizeof(sphere_vertices) / sizeof(FVertexSimple);
+
+	// 버텍스 버퍼로 넘기기 전에 Scale Down합니다.
+	float scaleMod = 0.1f;
+	for (UINT i = 0; i < numVertices; ++i)
+	{
+		vertices[i].x *= scaleMod;
+		vertices[i].y *= scaleMod;
+		vertices[i].z *= scaleMod;
+	}
+
+	enum ETypePrimitive
+	{
+		EPT_Triangle,
+		EPT_Cube,
+		EPT_Sphere,
+		EPT_Max,
+	};
+
+	ETypePrimitive typePrimitive = EPT_Triangle;
+
+	ID3D11Buffer* vertexBufferTriangle = renderer.CreateVertexBuffer(triangle_vertices, sizeof(triangle_vertices));
+	ID3D11Buffer* vertexBufferCube = renderer.CreateVertexBuffer(cube_vertices, sizeof(cube_vertices));
+	ID3D11Buffer* vertexBufferSphere = renderer.CreateVertexBuffer(sphere_vertices, sizeof(sphere_vertices));
+
 	// Main Loop (Quit Message가 들어오기 전까지 아래 Loop를 무한히 실행하게 됨)
 	while (bIsExit == false)
 	{
@@ -91,61 +190,56 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_  HINSTANCE hPrevInstance, 
 		renderer.Prepare();
 		renderer.PrepareShader();
 
-		// Renderer와 Shader 생성 이후에 버텍스 버퍼를 생성합니다.
-		FVertexSimple triangle_vertices[] =
+
+		UINT numVerticesTriangle = sizeof(triangle_vertices) / sizeof(FVertexSimple);
+		UINT numVerticesCube = sizeof(cube_vertices) / sizeof(FVertexSimple);
+		UINT numVerticesSphere = sizeof(sphere_vertices) / sizeof(FVertexSimple);
+
+		switch (typePrimitive)
 		{
-			{  0.0f,  1.0f, 0.0f,  1.0f, 0.0f, 0.0f, 1.0f }, // Top vertex (red)
-			{  1.0f, -1.0f, 0.0f,  0.0f, 1.0f, 0.0f, 1.0f }, // Bottom-right vertex (green)
-			{ -1.0f, -1.0f, 0.0f,  0.0f, 0.0f, 1.0f, 1.0f }  // Bottom-left vertex (blue)
-		};
-
-		FVertexSimple* vertices = triangle_vertices;
-		UINT ByteWidth = sizeof(triangle_vertices);
-		UINT numVertices = sizeof(triangle_vertices) / sizeof(FVertexSimple);
-
-		// 생성
-		D3D11_BUFFER_DESC vertexbufferdesc = {};
-		vertexbufferdesc.ByteWidth = ByteWidth;
-		vertexbufferdesc.Usage = D3D11_USAGE_IMMUTABLE;
-		vertexbufferdesc.BindFlags = D3D11_BIND_VERTEX_BUFFER;
-
-		D3D11_SUBRESOURCE_DATA vertexbufferSRD = { vertices };
-
-		ID3D11Buffer* vertexBuffer;
-
-		renderer.Device->CreateBuffer(&vertexbufferdesc, &vertexbufferSRD, &vertexBuffer);
-
-		// 생성한 버텍스 버퍼를 넘겨 실질적인 렌더링 요청
-		renderer.RenderPrimitive(vertexBuffer, numVertices);
+		case EPT_Triangle:
+			renderer.RenderPrimitive(vertexBufferTriangle, numVerticesTriangle);
+			break;
+		case EPT_Cube:
+			renderer.RenderPrimitive(vertexBufferCube, numVerticesCube);
+			break;
+		case EPT_Sphere:
+			renderer.RenderPrimitive(vertexBufferSphere, numVerticesSphere);
+			break;
+		}
 
 		ImGui_ImplDX11_NewFrame();
 		ImGui_ImplWin32_NewFrame();
 		ImGui::NewFrame();
-
-		// 이후 ImGui UI 컨트롤 추가는 ImGui::NewFrame()과 ImGui::Render() 사이인 여기에 위치합니다.
 		ImGui::Begin("Jungle Property Window");
-
 		ImGui::Text("Hello Jungle World!");
-
-		if (ImGui::Button("Quit this app"))
+		if (ImGui::Button("Change primitive"))
 		{
-			// 현재 윈도우에 Quit 메시지를 메시지 큐로 보냄
-			PostMessage(hWnd, WM_QUIT, 0, 0);
+			switch (typePrimitive)
+			{
+			case EPT_Triangle:
+				typePrimitive = EPT_Cube;
+				break;
+			case EPT_Cube:
+				typePrimitive = EPT_Sphere;
+				break;
+			case EPT_Sphere:
+				typePrimitive = EPT_Triangle;
+				break;
+			}
 		}
-
 		ImGui::End();
-
 		ImGui::Render();
 		ImGui_ImplDX11_RenderDrawData(ImGui::GetDrawData());
 
 		// 다 그렸으면 버퍼를 교환
 		renderer.SwapBuffer();
 
-		////////////////////////////////////////////
-
-		// 버텍스 버퍼 소멸은 Renderer 소멸전에 처리합니다.
-		vertexBuffer->Release();
 	}
+
+	renderer.ReleaseVertexBuffer(vertexBufferTriangle);
+	renderer.ReleaseVertexBuffer(vertexBufferCube);
+	renderer.ReleaseVertexBuffer(vertexBufferSphere);
 
 	// 여기에서 ImGui 소멸
 	ImGui_ImplDX11_Shutdown();
