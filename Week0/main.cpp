@@ -126,29 +126,17 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_  HINSTANCE hPrevInstance, 
 		{  0.5f, -0.5f, -0.5f,  1.0f, 0.0f, 0.5f, 1.0f }, // Bottom-right (purple)
 	};
 
-	// 삼각형
-	/* FVertexSimple* vertices = triangle_vertices;
-	UINT ByteWidth = sizeof(triangle_vertices);
-	UINT numVertices = sizeof(triangle_vertices) / sizeof(FVertexSimple);*/
-
-	// 사각형
-	/*FVertexSimple* vertices = cube_vertices;
-	UINT ByteWidth = sizeof(cube_vertices);
-	UINT numVertices = sizeof(cube_vertices) / sizeof(FVertexSimple);*/
-
-	// 구
-	FVertexSimple* vertices = sphere_vertices;
-	UINT ByteWidth = sizeof(sphere_vertices);
-	UINT numVertices = sizeof(sphere_vertices) / sizeof(FVertexSimple);
+	float scaleMod = 0.1f;
 
 	// 버텍스 버퍼로 넘기기 전에 Scale Down합니다.
-	float scaleMod = 0.1f;
+	UINT numVertices = sizeof(sphere_vertices) / sizeof(FVertexSimple);
 	for (UINT i = 0; i < numVertices; ++i)
 	{
-		vertices[i].x *= scaleMod;
-		vertices[i].y *= scaleMod;
-		vertices[i].z *= scaleMod;
+		sphere_vertices[i].x *= scaleMod;
+		sphere_vertices[i].y *= scaleMod;
+		sphere_vertices[i].z *= scaleMod;
 	}
+
 
 	enum ETypePrimitive
 	{
@@ -158,7 +146,7 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_  HINSTANCE hPrevInstance, 
 		EPT_Max,
 	};
 
-	ETypePrimitive typePrimitive = EPT_Triangle;
+	ETypePrimitive typePrimitive = EPT_Sphere;
 
 	ID3D11Buffer* vertexBufferTriangle = renderer.CreateVertexBuffer(triangle_vertices, sizeof(triangle_vertices));
 	ID3D11Buffer* vertexBufferCube = renderer.CreateVertexBuffer(cube_vertices, sizeof(cube_vertices));
@@ -166,11 +154,36 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_  HINSTANCE hPrevInstance, 
 
 	// 도형의 움직임 정도를 담을 offset 변수를 Main 루프 바로 앞에 정의 하세요.	
 	FVector3 offset(0.0f);
+	FVector3 velocity(0.0f);
+
+	const float leftBorder = -1.0f;
+	const float rightBorder = 1.0f;
+	const float topBorder = -1.0f;
+	const float bottomBorder = 1.0f;
+	const float sphereRadius = 1.0f;
+
+	bool bBoundBallToScreen = true;
+	bool bPinballMovement = true;
+
+	velocity.x = ((float)(rand() % 100 - 50)) * 0.001f;
+	velocity.y = ((float)(rand() % 100 - 50)) * 0.001f;
+
+	const int targetFPS = 30;
+	const double targetFrameTime = 1000.0 / targetFPS; // 한 프레임의 목표 시간 (밀리초 단위)
+
+	// 고성능 타이머 초기화
+	LARGE_INTEGER frequency;
+	QueryPerformanceFrequency(&frequency);
+
+	LARGE_INTEGER startTime, endTime;
+	double elapsedTime = 0.0;
 
 	// Main Loop (Quit Message가 들어오기 전까지 아래 Loop를 무한히 실행하게 됨)
 	while (bIsExit == false)
 	{
 		MSG msg;
+
+		QueryPerformanceCounter(&startTime);
 
 		// 처리할 메시지가 더 이상 없을때 까지 수행
 		while (PeekMessage(&msg, nullptr, 0, 0, PM_REMOVE))
@@ -206,15 +219,62 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_  HINSTANCE hPrevInstance, 
 				{
 					offset.y -= 0.01f;
 				}
+				// 키보드 처리 직후에 하면 밖을 벗어났다면 화면 안쪽으로 위치시킨다.
+				// 화면을 벗어나지 않아야 한다면
+				if (bBoundBallToScreen)
+				{
+					float renderRadius = sphereRadius * scaleMod;
+					if (offset.x < leftBorder + renderRadius)
+					{
+						offset.x = leftBorder + renderRadius;
+					}
+					if (offset.x > rightBorder - renderRadius)
+					{
+						offset.x = rightBorder - renderRadius;
+					}
+					if (offset.y < topBorder + renderRadius)
+					{
+						offset.y = topBorder + renderRadius;
+					}
+					if (offset.y > bottomBorder - renderRadius)
+					{
+						offset.y = bottomBorder - renderRadius;
+					}
+				}
 			}
 		}
-		////////////////////////////////////////////
-		// 매번 실행되는 코드를 여기에 추가합니다.
+
+		// 핀볼 움직임이 켜져 있다면
+		if (bPinballMovement)
+		{
+			// 속도를 공위치에 더해 공을 실질적으로 움직임
+			offset.x += velocity.x;
+			offset.y += velocity.y;
+			offset.z += velocity.z;
+
+			// 벽과 충돌 여부를 체크하고 충돌시 속도에 음수를 곱해 방향을 바꿈
+			float renderRadius = sphereRadius * scaleMod;
+			if (offset.x < leftBorder + renderRadius)
+			{
+				velocity.x *= -1.0f;
+			}
+			if (offset.x > rightBorder - renderRadius)
+			{
+				velocity.x *= -1.0f;
+			}
+			if (offset.y < topBorder + renderRadius)
+			{
+				velocity.y *= -1.0f;
+			}
+			if (offset.y > bottomBorder - renderRadius)
+			{
+				velocity.y *= -1.0f;
+			}
+		}
 
 		// 준비 작업
 		renderer.Prepare();
 		renderer.PrepareShader();
-
 
 		UINT numVerticesTriangle = sizeof(triangle_vertices) / sizeof(FVertexSimple);
 		UINT numVerticesCube = sizeof(cube_vertices) / sizeof(FVertexSimple);
@@ -256,12 +316,26 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_  HINSTANCE hPrevInstance, 
 				break;
 			}
 		}
+		ImGui::Checkbox("Bound Ball To Screen", &bBoundBallToScreen);
+		ImGui::Checkbox("Pinball Movement", &bPinballMovement);
 		ImGui::End();
 		ImGui::Render();
 		ImGui_ImplDX11_RenderDrawData(ImGui::GetDrawData());
 
 		// 다 그렸으면 버퍼를 교환
 		renderer.SwapBuffer();
+
+		do
+		{
+			Sleep(0);
+
+			// 루프 종료 시간 기록
+			QueryPerformanceCounter(&endTime);
+
+			// 한 프레임이 소요된 시간 계산 (밀리초 단위로 변환)
+			elapsedTime = (endTime.QuadPart - startTime.QuadPart) * 1000.0 / frequency.QuadPart;
+
+		} while (elapsedTime < targetFrameTime);
 
 	}
 
