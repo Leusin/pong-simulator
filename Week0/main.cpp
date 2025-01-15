@@ -1,4 +1,4 @@
-#pragma once
+ï»¿#pragma once
 
 #include <windows.h>
 #include "URenderer.h"
@@ -7,7 +7,7 @@
 
 extern LRESULT ImGui_ImplWin32_WndProcHandler(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam);
 
-// °¢Á¾ ¸Ş½ÃÁö¸¦ Ã³¸®ÇÒ ÇÔ¼ö
+// ê°ì¢… ë©”ì‹œì§€ë¥¼ ì²˜ë¦¬í•  í•¨ìˆ˜
 LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 {
 	if (ImGui_ImplWin32_WndProcHandler(hWnd, message, wParam, lParam))
@@ -30,35 +30,36 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 
 int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_  HINSTANCE hPrevInstance, _In_  LPSTR lpCmdLine, _In_ int nShowCmd)
 {
-	// À©µµ¿ì Å¬·¡½º ÀÌ¸§
+	// ìœˆë„ìš° í´ë˜ìŠ¤ ì´ë¦„
 	WCHAR WindowClass[] = L"JungleWindowClass";
 
-	// À©µµ¿ì Å¸ÀÌÆ²¹Ù¿¡ Ç¥½ÃµÉ ÀÌ¸§
+	// ìœˆë„ìš° íƒ€ì´í‹€ë°”ì— í‘œì‹œë  ì´ë¦„
 	WCHAR Title[] = L"Game Tech Lab";
 
-	// °¢Á¾ ¸Ş½ÃÁö¸¦ Ã³¸®ÇÒ ÇÔ¼öÀÎ WndProcÀÇ ÇÔ¼ö Æ÷ÀÎÅÍ¸¦ WindowClass ±¸Á¶Ã¼¿¡ ³Ö´Â´Ù.
+	// ê°ì¢… ë©”ì‹œì§€ë¥¼ ì²˜ë¦¬í•  í•¨ìˆ˜ì¸ WndProcì˜ í•¨ìˆ˜ í¬ì¸í„°ë¥¼ WindowClass êµ¬ì¡°ì²´ì— ë„£ëŠ”ë‹¤.
 	WNDCLASSW wndclass = { 0, WndProc, 0, 0, 0, 0, 0, 0, 0, WindowClass };
 
-	// À©µµ¿ì Å¬·¡½º µî·Ï
+	// ìœˆë„ìš° í´ë˜ìŠ¤ ë“±ë¡
 	RegisterClassW(&wndclass);
 
-	// 1024 x 1024 Å©±â¿¡ À©µµ¿ì »ı¼º
+	// 1024 x 1024 í¬ê¸°ì— ìœˆë„ìš° ìƒì„±
 	HWND hWnd = CreateWindowExW(0, WindowClass, Title, WS_POPUP | WS_VISIBLE | WS_OVERLAPPEDWINDOW,
 		CW_USEDEFAULT, CW_USEDEFAULT, 1024, 1024,
 		nullptr, nullptr, hInstance, nullptr);
 
 	bool bIsExit = false;
 
-	// °¢Á¾ »ı¼ºÇÏ´Â ÄÚµå¸¦ ¿©±â¿¡ Ãß°¡ÇÕ´Ï´Ù.
-	// Renderer Class¸¦ »ı¼ºÇÕ´Ï´Ù.
+	// ê°ì¢… ìƒì„±í•˜ëŠ” ì½”ë“œë¥¼ ì—¬ê¸°ì— ì¶”ê°€í•©ë‹ˆë‹¤.
+	// Renderer Classë¥¼ ìƒì„±í•©ë‹ˆë‹¤.
 	URenderer renderer;
 
-	// D3D11 »ı¼ºÇÏ´Â ÇÔ¼ö¸¦ È£ÃâÇÕ´Ï´Ù.
+	// D3D11 ìƒì„±í•˜ëŠ” í•¨ìˆ˜ë¥¼ í˜¸ì¶œí•©ë‹ˆë‹¤.
 	renderer.Create(hWnd);
-	// ·»´õ·¯ »ı¼º Á÷ÈÄ¿¡ ½¦ÀÌ´õ¸¦ »ı¼ºÇÏ´Â ÇÔ¼ö¸¦ È£ÃâÇÕ´Ï´Ù.
+	// ë Œë”ëŸ¬ ìƒì„± ì§í›„ì— ì‰ì´ë”ë¥¼ ìƒì„±í•˜ëŠ” í•¨ìˆ˜ë¥¼ í˜¸ì¶œí•©ë‹ˆë‹¤.
 	renderer.CreateShader();
+	renderer.CreateConstantBuffer();
 
-	// ¿©±â¿¡¼­ ImGui¸¦ »ı¼ºÇÕ´Ï´Ù.
+	// ì—¬ê¸°ì—ì„œ ImGuië¥¼ ìƒì„±í•©ë‹ˆë‹¤.
 	IMGUI_CHECKVERSION();
 	ImGui::CreateContext();
 	ImGuiIO& io = ImGui::GetIO();
@@ -66,7 +67,7 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_  HINSTANCE hPrevInstance, 
 	ImGui_ImplDX11_Init(renderer.Device, renderer.DeviceContext);
 
 
-	// Renderer¿Í Shader »ı¼º ÀÌÈÄ¿¡ ¹öÅØ½º ¹öÆÛ¸¦ »ı¼ºÇÕ´Ï´Ù.
+	// Rendererì™€ Shader ìƒì„± ì´í›„ì— ë²„í…ìŠ¤ ë²„í¼ë¥¼ ìƒì„±í•©ë‹ˆë‹¤.
 	FVertexSimple triangle_vertices[] =
 	{
 		{  0.0f,  1.0f, 0.0f,  1.0f, 0.0f, 0.0f, 1.0f }, // Top vertex (red)
@@ -125,22 +126,22 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_  HINSTANCE hPrevInstance, 
 		{  0.5f, -0.5f, -0.5f,  1.0f, 0.0f, 0.5f, 1.0f }, // Bottom-right (purple)
 	};
 
-	// »ï°¢Çü
+	// ì‚¼ê°í˜•
 	/* FVertexSimple* vertices = triangle_vertices;
 	UINT ByteWidth = sizeof(triangle_vertices);
 	UINT numVertices = sizeof(triangle_vertices) / sizeof(FVertexSimple);*/
 
-	// »ç°¢Çü
+	// ì‚¬ê°í˜•
 	/*FVertexSimple* vertices = cube_vertices;
 	UINT ByteWidth = sizeof(cube_vertices);
 	UINT numVertices = sizeof(cube_vertices) / sizeof(FVertexSimple);*/
 
-	// ±¸
+	// êµ¬
 	FVertexSimple* vertices = sphere_vertices;
 	UINT ByteWidth = sizeof(sphere_vertices);
 	UINT numVertices = sizeof(sphere_vertices) / sizeof(FVertexSimple);
 
-	// ¹öÅØ½º ¹öÆÛ·Î ³Ñ±â±â Àü¿¡ Scale DownÇÕ´Ï´Ù.
+	// ë²„í…ìŠ¤ ë²„í¼ë¡œ ë„˜ê¸°ê¸° ì „ì— Scale Downí•©ë‹ˆë‹¤.
 	float scaleMod = 0.1f;
 	for (UINT i = 0; i < numVertices; ++i)
 	{
@@ -163,18 +164,21 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_  HINSTANCE hPrevInstance, 
 	ID3D11Buffer* vertexBufferCube = renderer.CreateVertexBuffer(cube_vertices, sizeof(cube_vertices));
 	ID3D11Buffer* vertexBufferSphere = renderer.CreateVertexBuffer(sphere_vertices, sizeof(sphere_vertices));
 
-	// Main Loop (Quit Message°¡ µé¾î¿À±â Àü±îÁö ¾Æ·¡ Loop¸¦ ¹«ÇÑÈ÷ ½ÇÇàÇÏ°Ô µÊ)
+	// ë„í˜•ì˜ ì›€ì§ì„ ì •ë„ë¥¼ ë‹´ì„ offset ë³€ìˆ˜ë¥¼ Main ë£¨í”„ ë°”ë¡œ ì•ì— ì •ì˜ í•˜ì„¸ìš”.	
+	FVector3 offset(0.0f);
+
+	// Main Loop (Quit Messageê°€ ë“¤ì–´ì˜¤ê¸° ì „ê¹Œì§€ ì•„ë˜ Loopë¥¼ ë¬´í•œíˆ ì‹¤í–‰í•˜ê²Œ ë¨)
 	while (bIsExit == false)
 	{
 		MSG msg;
 
-		// Ã³¸®ÇÒ ¸Ş½ÃÁö°¡ ´õ ÀÌ»ó ¾øÀ»¶§ ±îÁö ¼öÇà
+		// ì²˜ë¦¬í•  ë©”ì‹œì§€ê°€ ë” ì´ìƒ ì—†ì„ë•Œ ê¹Œì§€ ìˆ˜í–‰
 		while (PeekMessage(&msg, nullptr, 0, 0, PM_REMOVE))
 		{
-			// Å° ÀÔ·Â ¸Ş½ÃÁö¸¦ ¹ø¿ª
+			// í‚¤ ì…ë ¥ ë©”ì‹œì§€ë¥¼ ë²ˆì—­
 			TranslateMessage(&msg);
 
-			// ¸Ş½ÃÁö¸¦ ÀûÀıÇÑ À©µµ¿ì ÇÁ·Î½ÃÀú¿¡ Àü´Ş, ¸Ş½ÃÁö°¡ À§¿¡¼­ µî·ÏÇÑ WndProc À¸·Î Àü´ŞµÊ
+			// ë©”ì‹œì§€ë¥¼ ì ì ˆí•œ ìœˆë„ìš° í”„ë¡œì‹œì €ì— ì „ë‹¬, ë©”ì‹œì§€ê°€ ìœ„ì—ì„œ ë“±ë¡í•œ WndProc ìœ¼ë¡œ ì „ë‹¬ë¨
 			DispatchMessage(&msg);
 
 			if (msg.message == WM_QUIT)
@@ -182,11 +186,32 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_  HINSTANCE hPrevInstance, 
 				bIsExit = true;
 				break;
 			}
+			else if (msg.message == WM_KEYDOWN) // í‚¤ë³´ë“œ ëˆŒë ¸ì„ ë•Œ
+			{
+				// ëˆŒë¦° í‚¤ê°€ ë°©í–¥í‚¤ë¼ë©´ í•´ë‹¹ ë°©í–¥ì— ë§ì¶°ì„œ
+				// offset ë³€ìˆ˜ì˜ x, y ë§´ë²„ ë³€ìˆ˜ì˜ ê°’ì„ ì¡°ì •í•©ë‹ˆë‹¤.
+				if (msg.wParam == VK_LEFT)
+				{
+					offset.x -= 0.01f;
+				}
+				if (msg.wParam == VK_RIGHT)
+				{
+					offset.x += 0.01f;
+				}
+				if (msg.wParam == VK_UP)
+				{
+					offset.y += 0.01f;
+				}
+				if (msg.wParam == VK_DOWN)
+				{
+					offset.y -= 0.01f;
+				}
+			}
 		}
 		////////////////////////////////////////////
-		// ¸Å¹ø ½ÇÇàµÇ´Â ÄÚµå¸¦ ¿©±â¿¡ Ãß°¡ÇÕ´Ï´Ù.
+		// ë§¤ë²ˆ ì‹¤í–‰ë˜ëŠ” ì½”ë“œë¥¼ ì—¬ê¸°ì— ì¶”ê°€í•©ë‹ˆë‹¤.
 
-		// ÁØºñ ÀÛ¾÷
+		// ì¤€ë¹„ ì‘ì—…
 		renderer.Prepare();
 		renderer.PrepareShader();
 
@@ -194,6 +219,9 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_  HINSTANCE hPrevInstance, 
 		UINT numVerticesTriangle = sizeof(triangle_vertices) / sizeof(FVertexSimple);
 		UINT numVerticesCube = sizeof(cube_vertices) / sizeof(FVertexSimple);
 		UINT numVerticesSphere = sizeof(sphere_vertices) / sizeof(FVertexSimple);
+
+		// offsetì„ ìƒìˆ˜ ë²„í¼ë¡œ ì—…ë°ì´íŠ¸ í•©ë‹ˆë‹¤.
+		renderer.UpdateConstant(offset);
 
 		switch (typePrimitive)
 		{
@@ -232,7 +260,7 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_  HINSTANCE hPrevInstance, 
 		ImGui::Render();
 		ImGui_ImplDX11_RenderDrawData(ImGui::GetDrawData());
 
-		// ´Ù ±×·ÈÀ¸¸é ¹öÆÛ¸¦ ±³È¯
+		// ë‹¤ ê·¸ë ¸ìœ¼ë©´ ë²„í¼ë¥¼ êµí™˜
 		renderer.SwapBuffer();
 
 	}
@@ -241,14 +269,13 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_  HINSTANCE hPrevInstance, 
 	renderer.ReleaseVertexBuffer(vertexBufferCube);
 	renderer.ReleaseVertexBuffer(vertexBufferSphere);
 
-	// ¿©±â¿¡¼­ ImGui ¼Ò¸ê
+	// ì—¬ê¸°ì—ì„œ ImGui ì†Œë©¸
 	ImGui_ImplDX11_Shutdown();
 	ImGui_ImplWin32_Shutdown();
 	ImGui::DestroyContext();
 
-	// ·»´õ·¯ ¼Ò¸ê Á÷Àü¿¡ ½¦ÀÌ´õ¸¦ ¼Ò¸ê ½ÃÅ°´Â ÇÔ¼ö¸¦ È£ÃâÇÕ´Ï´Ù.
+	renderer.ReleaseConstantBuffer();
 	renderer.ReleaseShader();
-	// D3D11 ¼Ò¸ê ½ÃÅ°´Â ÇÔ¼ö¸¦ È£ÃâÇÕ´Ï´Ù.
 	renderer.Release();
 
 	return 0;
