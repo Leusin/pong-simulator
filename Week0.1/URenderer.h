@@ -33,12 +33,13 @@ public:
 	D3D11_VIEWPORT ViewportInfo; // 렌더링 영역을 정의하는 뷰포트 정보
 
 public:
-	// 기존 URenderer Class에 아래 코드를 추가 하세요.
-
 	ID3D11VertexShader* SimpleVertexShader;
 	ID3D11PixelShader* SimplePixelShader;
 	ID3D11InputLayout* SimpleInputLayout;
 	unsigned int Stride;
+
+public:
+	void OnResize(int width, int height, HWND hWindow);
 
 public:
 	// 렌더러 초기화 함수
@@ -118,14 +119,24 @@ public:
 	void CreateFrameBuffer()
 	{
 		// 스왑 체인으로부터 백 버퍼 텍스처 가져오기
-		SwapChain->GetBuffer(0, __uuidof(ID3D11Texture2D), (void**)&FrameBuffer);
+		HRESULT hr =  SwapChain->GetBuffer(0, __uuidof(ID3D11Texture2D), (void**)&FrameBuffer);
+
+		if (FAILED(hr))
+		{
+			return;
+		}
 
 		// 렌더 타겟 뷰 생성
 		D3D11_RENDER_TARGET_VIEW_DESC framebufferRTVdesc = {};
 		framebufferRTVdesc.Format = DXGI_FORMAT_B8G8R8A8_UNORM_SRGB; // 색상 포맷
 		framebufferRTVdesc.ViewDimension = D3D11_RTV_DIMENSION_TEXTURE2D; // 2D 텍스처
 
-		Device->CreateRenderTargetView(FrameBuffer, &framebufferRTVdesc, &FrameBufferRTV);
+		hr = Device->CreateRenderTargetView(FrameBuffer, &framebufferRTVdesc, &FrameBufferRTV);
+
+		if (FAILED(hr))
+		{
+			return;
+		}
 	}
 
 	// 프레임 버퍼를 해제하는 함수
@@ -251,7 +262,6 @@ public:
 		DeviceContext->PSSetShader(SimplePixelShader, nullptr, 0);
 		DeviceContext->IASetInputLayout(SimpleInputLayout);
 
-		//여기에 추가하세요.
 		// 버텍스 쉐이더에 상수 버퍼를 설정합니다.
 		if (ConstantBuffer)
 		{
@@ -277,7 +287,6 @@ public:
 		vertexbufferdesc.BindFlags = D3D11_BIND_VERTEX_BUFFER;
 
 		D3D11_SUBRESOURCE_DATA vertexbufferSRD = { vertices };
-
 		ID3D11Buffer* vertexBuffer;
 
 		Device->CreateBuffer(&vertexbufferdesc, &vertexbufferSRD, &vertexBuffer);

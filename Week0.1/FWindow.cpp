@@ -2,6 +2,8 @@
 
 extern LRESULT ImGui_ImplWin32_WndProcHandler(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam);
 
+std::function<void(int, int, HWND)> FWindow::OnResizeCallback = nullptr;
+
 FWindow::FWindow(HINSTANCE InInstance, LPCWSTR InTitle , int InWidth, int InHeight)
 {
 	// 윈도우 클래스 초기화
@@ -59,9 +61,21 @@ LRESULT CALLBACK FWindow::WindowProc(HWND InHWnd, UINT InMessage, WPARAM InWPara
 	switch (InMessage)
 	{
 	case WM_CLOSE:
+		PostQuitMessage(0);
 		return 0;
 	case WM_DESTROY:
 		PostQuitMessage(0);
+		return 0;
+	case WM_SIZE:
+		if (InWParam != SIZE_MINIMIZED) // 최소화 상태가 아니라면
+		{
+			int ResizeWidth = (UINT)LOWORD(InLParam);
+			int ResizeHeight = (UINT)HIWORD(InLParam);
+			if (OnResizeCallback)
+			{
+				OnResizeCallback(ResizeWidth, ResizeHeight, InHWnd);
+			}
+		}
 		return 0;
 	default:
 		return DefWindowProc(InHWnd, InMessage, InWParam, InLParam);

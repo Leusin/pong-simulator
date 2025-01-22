@@ -12,10 +12,16 @@ public:
 	void Render();
 	void Shutdown();
 
+	void OnResize(int width, int height, HWND hWnd);
+	
 private:
-	HWND hWnd;
+	ImVec4 ClearColor = ImVec4(0.025f, 0.025f, 0.025f, 1.0f);
+	FVector3 Offset = {0.f, 0.f, 0.f};
+	bool bShowDemoWindow = false;
+
+private:
 	URenderer renderer;
-	InputManager inputManager;
-	SceneManager sceneManager;
+	//InputManager inputManager;
+	//SceneManager sceneManager;
 };
 

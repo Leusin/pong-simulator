@@ -1,8 +1,7 @@
 #pragma once
 
 #include <cstdint>
-#include <arm_neon.h>
-
+#include <arm64_neon.h>
 
 /*
 * 참고: 게임 엔진 아키텍처 p344
