@@ -3,6 +3,7 @@
 #include "URenderer.h"
 #include "InputManager.h"
 #include "SceneManager.h"
+#include "DebugUIManager.h"
 
 class Engine
 {
@@ -20,7 +21,9 @@ private:
 	bool bShowDemoWindow = false;
 
 private:
+	HWND hWnd;
 	URenderer renderer;
+	DebugUIManager debugUI;
 	//InputManager inputManager;
 	//SceneManager sceneManager;
 };

@@ -9,19 +9,7 @@ void Engine::Initialize(HWND hWnd)
 	renderer.CreateShader();
 	renderer.CreateConstantBuffer();
 
-	// ImGui 초기화
-	IMGUI_CHECKVERSION();
-	ImGui::CreateContext();
-	ImGuiIO& io = ImGui::GetIO();
-	io.ConfigFlags |= ImGuiConfigFlags_NavEnableKeyboard;     // Enable Keyboard Controls
-	io.ConfigFlags |= ImGuiConfigFlags_NavEnableGamepad;      // Enable Gamepad Controls
-
-	ImGui_ImplWin32_Init(hWnd);
-
-	if (renderer.Device != nullptr && renderer.DeviceContext != nullptr) 
-	{
-		ImGui_ImplDX11_Init(renderer.Device, renderer.DeviceContext);
-	}
+	debugUI.Startup(hWnd, renderer.Device, renderer.DeviceContext);
 }
 
 void Engine::Update()
@@ -50,36 +38,12 @@ void Engine::Render()
 	INT numVerticesTriangle = sizeof(cube_vertices) / sizeof(FVertexSimple);
 	renderer.RenderPrimitive(vertexBuffer, numVerticesTriangle);
 
-	// PrepareImGuiFrame
-	ImGui_ImplDX11_NewFrame();
-	ImGui_ImplWin32_NewFrame();
-	ImGui::NewFrame();
-
-	if (bShowDemoWindow)
-	{
-		ImGui::ShowDemoWindow(&bShowDemoWindow);
-	}
-
-	// RenderImGuiUI
-	ImGui::Begin("Jungle Property Window");
-	ImGui::Text("Hello, ImGui!");
-	if (ImGui::Button("Quit this app"))
-	{
-		// 현재 윈도우에 Quit 메시지를 메시지 큐로 보냄
-		PostMessage(hWnd, WM_QUIT, 0, 0); 
-	}
-	ImGui::Checkbox("Demo Window", &bShowDemoWindow);
-
-	renderer.ClearColor[0] = ClearColor.x;
-	renderer.ClearColor[1] = ClearColor.y;
-	renderer.ClearColor[2] = ClearColor.z;
-	renderer.ClearColor[3] = ClearColor.w;
-	ImGui::ColorEdit3("clear color", (float*)&ClearColor); // Edit 3 floats representing a color
-	ImGui::End();
-
-	/* 여기서 IMGUI 컨텐츠 추가할 것 */
-	ImGui::Render();
-	ImGui_ImplDX11_RenderDrawData(ImGui::GetDrawData());
+	renderer.ClearColor[0] = debugUI.ClearColor.x;
+	renderer.ClearColor[1] = debugUI.ClearColor.y;
+	renderer.ClearColor[2] = debugUI.ClearColor.z;
+	renderer.ClearColor[3] = debugUI.ClearColor.w;
+	
+	debugUI.Render();
 
 	renderer.SwapBuffer();
 
@@ -111,9 +75,7 @@ void Engine::Render()
 
 void Engine::Shutdown()
 {
-	ImGui_ImplDX11_Shutdown();
-	ImGui_ImplWin32_Shutdown();
-	ImGui::DestroyContext();
+	debugUI.Shutdown();
 
 	renderer.Release();
 }
