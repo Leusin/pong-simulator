@@ -2,17 +2,29 @@
 
 #include <windows.h>
 #include <d3d11.h>
+#include <functional>
 #include "imgui/imgui.h"
 
 class DebugUIManager
 {
-    bool bShowDemoWindow = false;
+public:
+    ImVec4 ClearColor;
+    
+    float DeltaTime;
+    float GameTime;
+    float RunningTime;
+
+    std::function<void()> TimeStopCallback;
+    std::function<void()> TimeStartCallback;
+    std::function<void()> TimeResetCallback;
+
+private:
     HWND hWnd;
+    bool bShowDemoWindow = false;
 
 public:
-    ImVec4 ClearColor = ImVec4(0.025f, 0.025f, 0.025f, 1.0f);
+    DebugUIManager();
 
-public:
     void Startup(HWND hWnd, ID3D11Device* Device, ID3D11DeviceContext* DeviceContext);
     void Render();
     void Shutdown();

@@ -2,29 +2,15 @@
 #include <windows.h>
 
 GameTimer::GameTimer()
-	: SecondsPerCount(0.0)
-	, DeltaTime(-1.0)
-	, BaseTime(0)
-	, PausedTime(0)
-	, PrevTime(0)
-	, CurrentTime(0)
-	, bStopped(false)
+	: DeltaTime{ -1.0 }
+	, StartTime{ Clock::now() }
+	, BaseTime{ TimePoint() }
+	, PausedTime{ TimePoint() }
+	, StopTime{ TimePoint() }
+	, PrevTime{ TimePoint() }
+	, CurrentTime{ TimePoint() }
+	, bStopped{ false }
 {
-	LARGE_INTEGER frequency;
-	QueryPerformanceFrequency(&frequency);
-	SecondsPerCount = 1.0 / static_cast<double>(frequency.QuadPart);
-}
-
-float GameTimer::GetGameTime() const
-{
-	if (bStopped) 
-	{
-		return static_cast<float>(PausedTime - BaseTime);
-	}
-	else 
-	{
-		return static_cast<float>(CurrentTime - BaseTime);
-	}
 }
 
 float GameTimer::GetDeltaTime() const
@@ -32,61 +18,65 @@ float GameTimer::GetDeltaTime() const
 	return static_cast<float>(DeltaTime);
 }
 
+float GameTimer::GetRunTime() const
+{
+	return std::chrono::duration<float>
+		(Clock::now() - StartTime).count();
+}
+
 // 일시정지 외에 흐른 시간을 반환한다.
-float GameTimer::GetTotalTime() const
+float GameTimer::GetGameTime() const
 {
 	if (bStopped)
 	{
-		return static_cast<float>(((
-			StopTime - PausedTime) - BaseTime) * 
-			SecondsPerCount);
+		auto SincePause =
+			StopTime - PausedTime;
+		auto SinceEpoch =
+			std::chrono::duration_cast<std::chrono::nanoseconds>
+			(BaseTime.time_since_epoch());
+		return std::chrono::duration<float>
+			(SincePause - SinceEpoch).count();
 	}
 	else
 	{
-		return static_cast<float>(((
-			CurrentTime - PausedTime) - BaseTime) * 
-			SecondsPerCount
-			);
+		auto SinceStart =
+			CurrentTime - PausedTime;
+		auto LunchTime =
+			std::chrono::duration_cast<std::chrono::nanoseconds>
+			(BaseTime.time_since_epoch());
+		return std::chrono::duration<float>
+			(SinceStart - LunchTime).count();
 	}
 }
 
 void GameTimer::Reset()
 {
-	LARGE_INTEGER CurrentTime;
-	QueryPerformanceCounter(&CurrentTime);
-
-	BaseTime = static_cast<int64_t>(CurrentTime.QuadPart);
-	PrevTime = BaseTime;
-	StopTime = 0;
+	auto now = Clock::now();
+	BaseTime = now;
+	PrevTime = now;
+	StopTime = TimePoint();
 	bStopped = false;
 }
 
 void GameTimer::Start()
 {
-	LARGE_INTEGER CurrentTime;
-	QueryPerformanceCounter(&CurrentTime);
-	int64_t StartTime = static_cast<int64_t>(CurrentTime.QuadPart);
-
 	if (bStopped)
 	{
-		PausedTime += (StartTime - StopTime);
-		PrevTime = StartTime;
-		StopTime = 0;
+		auto now = Clock::now();
+		PausedTime += (now - StopTime); // Adjust paused duration
+		PrevTime = now;
+		StopTime = TimePoint();
 		bStopped = false;
 	}
 }
 
 void GameTimer::Stop()
 {
-	if (bStopped)
+	if (!bStopped)
 	{
-		return;
+		StopTime = Clock::now();
+		bStopped = true;
 	}
-
-	LARGE_INTEGER CurrentTime;
-	QueryPerformanceCounter(&CurrentTime);
-	StopTime = static_cast<int64_t>(CurrentTime.QuadPart);
-	bStopped = true;
 }
 
 void GameTimer::Tick()
@@ -97,17 +87,13 @@ void GameTimer::Tick()
 		return;
 	}
 
-	LARGE_INTEGER CurrentTime;
-	QueryPerformanceCounter(&CurrentTime);
-	this->CurrentTime = static_cast<int64_t>(CurrentTime.QuadPart);
+	CurrentTime = Clock::now();
+	DeltaTime = std::chrono::duration<double>
+		(CurrentTime - PrevTime).count();
+	PrevTime = CurrentTime;
 
-	DeltaTime = (this->CurrentTime - PrevTime) * SecondsPerCount;
-
-	PrevTime = this->CurrentTime;
-
-	// 프로세서가 절전 모드로 들어가거나
-	// 다른 프로세서와 엉키는 경우
-	// DeltaTime 이 음수가 될 수 있다.
+	// DeltaTime이 음수일 경우 0으로 처리
+	// (프로세서 절전 모드 등으로 인한 문제 방지)
 	if (DeltaTime < 0.0)
 	{
 		DeltaTime = 0.0;

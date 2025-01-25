@@ -1,9 +1,8 @@
 #pragma once
-#include <cstdint>
+#include <chrono>
 
 /*
-* Windows가 제공하는 성능 타이머
-* (performance timer)를 통해 구현
+* chrono 라이브러리를 통해 타이머 구현
 */
 class GameTimer
 {
@@ -12,7 +11,7 @@ public:
 
 	float GetGameTime() const;
 	float GetDeltaTime() const;
-	float GetTotalTime() const;
+	float GetRunTime() const;
 
 	// 메시지 루프 이전에 호출해야함.
 	void Reset();
@@ -25,15 +24,17 @@ public:
 	void Tick(); 
 
 private:
-	double SecondsPerCount;
+	using Clock = std::chrono::high_resolution_clock;
+	using TimePoint = std::chrono::time_point<Clock>;
+
 	double DeltaTime;
 
-	int64_t BaseTime;
-	int64_t PausedTime;
-	int64_t StopTime;
-	int64_t PrevTime;
-	int64_t CurrentTime;
+	TimePoint StartTime;
+	TimePoint BaseTime;
+	TimePoint PausedTime;
+	TimePoint StopTime;
+	TimePoint PrevTime;
+	TimePoint CurrentTime;
 
 	bool bStopped;
 };
-

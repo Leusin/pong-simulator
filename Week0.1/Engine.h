@@ -4,7 +4,7 @@
 #include "InputManager.h"
 #include "SceneManager.h"
 #include "DebugUIManager.h"
-
+#include "GameTimer.h"
 class Engine
 {
 public:
@@ -24,6 +24,7 @@ private:
 	HWND hWnd;
 	URenderer renderer;
 	DebugUIManager debugUI;
+	GameTimer Timer;
 	//InputManager inputManager;
 	//SceneManager sceneManager;
 };

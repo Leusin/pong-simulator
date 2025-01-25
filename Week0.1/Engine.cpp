@@ -1,5 +1,6 @@
 #include "Engine.h"
 #include "Vertices.h"
+#include <thread>
 
 void Engine::Initialize(HWND hWnd)
 {
@@ -10,6 +11,12 @@ void Engine::Initialize(HWND hWnd)
 	renderer.CreateConstantBuffer();
 
 	debugUI.Startup(hWnd, renderer.Device, renderer.DeviceContext);
+
+	Timer.Reset();
+
+	debugUI.TimeResetCallback = [this]() { Timer.Reset(); };
+	debugUI.TimeStartCallback = [this]() { Timer.Start(); };
+	debugUI.TimeStopCallback = [this]() { Timer.Stop(); };
 }
 
 void Engine::Update()
@@ -19,14 +26,20 @@ void Engine::Update()
 	if (GetAsyncKeyState(VK_LEFT) & 0x8000)
 	{
 		// 왼쪽 화살표 키가 눌렸을 때 처리
-		Offset.x -= 0.01f;
+		Offset.x -= 0.2f * Timer.GetDeltaTime();
 	}
 
 	if (GetAsyncKeyState(VK_RIGHT) & 0x8000)
 	{
 		// 오른쪽 화살표 키가 눌렸을 때 처리
-		Offset.x += 0.01f;
+		Offset.x += 0.2f * Timer.GetDeltaTime();
 	}
+
+	debugUI.DeltaTime = Timer.GetDeltaTime();
+	debugUI.GameTime = Timer.GetGameTime();
+	debugUI.RunningTime = Timer.GetRunTime();
+
+	Timer.Tick();
 }
 
 void Engine::Render()
@@ -46,37 +59,23 @@ void Engine::Render()
 	debugUI.Render();
 
 	renderer.SwapBuffer();
+	renderer.ReleaseVertexBuffer(vertexBuffer);
 
 	// LimitFrameRate
-	// TODO: 언젠가 Timer 클래스로 분리할 것
-	const int targetFPS = 30;
+	const int targetFPS = 60;
 	const double targetFrameTime = 1000.0 / targetFPS;
-	LARGE_INTEGER frequency;
-	QueryPerformanceFrequency(&frequency);
-	LARGE_INTEGER startTime, endTime;
-	double elapsedTime = 0.0;
-	QueryPerformanceCounter(&startTime);
-	do
+	double elapsedTime = Timer.GetDeltaTime() * 1000.0; // DeltaTime을 밀리초로 변환
+	if (elapsedTime < targetFrameTime)
 	{
-		Sleep(0);
+		std::this_thread::sleep_for(std::chrono::milliseconds(
+			static_cast<int>(targetFrameTime - elapsedTime)));
+	}
 
-		QueryPerformanceCounter(&endTime);
-
-		// 루프 종료 시간 기록
-		QueryPerformanceCounter(&endTime);
-
-		// 한 프레임이 소요된 시간 계산 (밀리초 단위로 변환)
-		elapsedTime = (endTime.QuadPart - startTime.QuadPart) * 1000.0 / frequency.QuadPart;
-
-	} while (elapsedTime < targetFrameTime);
-
-	renderer.ReleaseVertexBuffer(vertexBuffer);
 }
 
 void Engine::Shutdown()
 {
 	debugUI.Shutdown();
-
 	renderer.Release();
 }
 
