@@ -5,10 +5,10 @@ void FClock::Init()
 {
 	LARGE_INTEGER Frequency;
 	QueryPerformanceFrequency(&Frequency);
-	CyclesPerSecond = static_cast<float32_t>(Frequency.HighPart);
+	CyclesPerSecond = static_cast<float>(Frequency.HighPart);
 }
 
-FClock::FClock(float32_t StartTImeSeconds)
+FClock::FClock(float StartTImeSeconds)
 	: TimeCycles(SecondsToCycles(StartTImeSeconds))
 	, TimeScale(1.0f)
 	, bPaused(false)
@@ -20,13 +20,13 @@ uint64_t FClock::GetTimeCycles() const
 	return TimeCycles;
 }
 
-float32_t FClock::CalcDeltaSeconds(const FClock& Other)
+float FClock::CalcDeltaSeconds(const FClock& Other)
 {
 	uint64_t DeltaTime = TimeCycles - Other.TimeCycles;
 	return CyclesToSeconds(DeltaTime);
 }
 
-void FClock::Update(float32_t DeltaTImeRealSeconds)
+void FClock::Update(float DeltaTImeRealSeconds)
 {
 	if (!bPaused)
 	{
@@ -46,12 +46,12 @@ bool FClock::IsPaused() const
 	return bPaused;
 }
 
-void FClock::SetTimeScale(float32_t scale)
+void FClock::SetTimeScale(float scale)
 {
 	TimeScale = scale;
 }
 
-float32_t FClock::GetTimeScale() const
+float FClock::GetTimeScale() const
 {
 	return TimeScale;
 }
