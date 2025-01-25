@@ -13,7 +13,7 @@ public:
 	void Render();
 	void Shutdown();
 
-	void OnResize(int width, int height, HWND hWnd);
+	void OnResize(int width, int height);
 	
 private:
 	ImVec4 ClearColor = ImVec4(0.025f, 0.025f, 0.025f, 1.0f);

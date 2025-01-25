@@ -9,9 +9,8 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_  HINSTANCE hPrevInstance, 
 
 	Engine engine;
 	engine.Initialize(window.GetWindowHandle());
-
 	
-	window.OnResizeCallback = std::bind(&Engine::OnResize, &engine, std::placeholders::_1, std::placeholders::_2, std::placeholders::_3);
+	window.OnResizeCallback = std::bind(&Engine::OnResize, &engine, std::placeholders::_1, std::placeholders::_2);
 
 	// 메시지 루프
 	while (window.ProcessMessages())

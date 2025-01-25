@@ -80,7 +80,7 @@ void Engine::Shutdown()
 	renderer.Release();
 }
 
-void Engine::OnResize(int width, int height, HWND hWnd)
+void Engine::OnResize(int width, int height)
 {
 	renderer.OnResize(width, height, hWnd);
 }

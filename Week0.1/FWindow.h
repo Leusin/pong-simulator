@@ -12,7 +12,7 @@ public:
 	HWND GetWindowHandle() const { return HWnd; }
 	bool ProcessMessages();
 
-	static std::function<void(int, int, HWND)> OnResizeCallback;
+	static std::function<void(int, int)> OnResizeCallback;
 
 private:
 	HWND HWnd;

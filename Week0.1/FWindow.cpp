@@ -2,7 +2,7 @@
 
 extern LRESULT ImGui_ImplWin32_WndProcHandler(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam);
 
-std::function<void(int, int, HWND)> FWindow::OnResizeCallback = nullptr;
+std::function<void(int, int)> FWindow::OnResizeCallback = nullptr;
 
 FWindow::FWindow(HINSTANCE InInstance, LPCWSTR InTitle , int InWidth, int InHeight)
 {
@@ -73,7 +73,7 @@ LRESULT CALLBACK FWindow::WindowProc(HWND InHWnd, UINT InMessage, WPARAM InWPara
 			int ResizeHeight = (UINT)HIWORD(InLParam);
 			if (OnResizeCallback)
 			{
-				OnResizeCallback(ResizeWidth, ResizeHeight, InHWnd);
+				OnResizeCallback(ResizeWidth, ResizeHeight);
 			}
 		}
 		return 0;
