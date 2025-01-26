@@ -10,6 +10,10 @@ class DebugUIManager
 public:
     ImVec4 ClearColor;
     
+    int TargetFPS;
+
+    float FPS;
+    float MFPS;
     float DeltaTime;
     float GameTime;
     float RunningTime;

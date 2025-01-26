@@ -9,6 +9,7 @@
 DebugUIManager::DebugUIManager()
 	: DeltaTime{0.0f}
 	, GameTime{0.0f}
+	, TargetFPS{ 30 }
 	, TimeStopCallback{ nullptr }
 	, TimeStartCallback{ nullptr }
 	, TimeResetCallback{ nullptr }
@@ -49,6 +50,9 @@ void DebugUIManager::Render()
 	ImGui::Checkbox("Demo Window", &bShowDemoWindow);
 	ImGui::ColorEdit3("clear color", (float*)&ClearColor); // Edit 3 floats representing a color
 
+	ImGui::InputInt("Target FPS", &TargetFPS);
+
+	ImGui::Text("FPS/mFPS: %f(%f)", FPS, MFPS);
 	ImGui::Text("Running Time: %f", RunningTime);
 	ImGui::Text("Game Time: %f", GameTime);
 	ImGui::Text("Delta Time: %f", DeltaTime);
