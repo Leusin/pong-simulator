@@ -1,14 +1,11 @@
 ﻿#pragma once
 
-#include <d3d11.h>
 #include <d3dcompiler.h>
+#include <d3d11.h>
+#include "FVector3.h"
 #include "FVertexSimple.h"
-/*#include "imgui/imgui.h"
-#include "imgui/imgui_internal.h"
-#include "imgui/imgui_impl_dx11.h"
-#include "imgui/imgui_impl_win32.h"*/
 
-class URenderer
+class FGraphicsDX11Engine
 {
 public:
 	struct FConstants

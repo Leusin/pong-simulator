@@ -1,16 +1,17 @@
 ﻿// © 2024 KRAFTON, Inc. ALL RIGHTS RESERVED.
 
 #pragma once
+
 #include "FVertexSimple.h"
 
-FVertexSimple triangle_vertices[] =
+FVertexSimple GTriangleVertices[] =
 {
 	{  0.0f,  1.0f, 0.0f,  1.0f, 0.0f, 0.0f, 1.0f }, // Top vertex (red)
 	{  1.0f, -1.0f, 0.0f,  0.0f, 1.0f, 0.0f, 1.0f }, // Bottom-right vertex (green)
 	{ -1.0f, -1.0f, 0.0f,  0.0f, 0.0f, 1.0f, 1.0f }  // Bottom-left vertex (blue)
 };
 
-FVertexSimple cube_vertices[] =
+FVertexSimple GCubeVertices[] =
 {
 	// Front face (Z+)
 	{ -0.5f, -0.5f,  0.5f,  1.0f, 0.0f, 0.0f, 1.0f }, // Bottom-left (red)
@@ -21,7 +22,7 @@ FVertexSimple cube_vertices[] =
 	{  0.5f, -0.5f,  0.5f,  0.0f, 1.0f, 0.0f, 1.0f }, // Bottom-right (green)
 };
 
-FVertexSimple sphere_vertices[] = 
+FVertexSimple GSphereVertices[] = 
 {
 	{ 0.000000f, 1.000000f, 0.000000f, 0.500000f, 1.000000f, 0.500000f, 1.000000f },
 	{ 0.156434f, 0.987688f, 0.000000f, 0.578217f, 0.993844f, 0.500000f, 1.000000f },

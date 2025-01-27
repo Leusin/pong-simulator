@@ -8,6 +8,6 @@ void SceneManager::Update()
 {
 }
 
-void SceneManager::Render(URenderer& renderer)
+void SceneManager::Render(FGraphicsDX11Engine& renderer)
 {
 }

@@ -1,12 +1,9 @@
-#include "DebugUIManager.h"
-
-#include <d3dcompiler.h>
+#include "FDebugUIManager.h"
 #include "imgui/imgui.h"
-#include "imgui/imgui_internal.h"
 #include "imgui/imgui_impl_dx11.h"
 #include "imgui/imgui_impl_win32.h"
 
-DebugUIManager::DebugUIManager()
+FDebugUIManager::FDebugUIManager()
 	: DeltaTime{0.0f}
 	, GameTime{0.0f}
 	, TargetFPS{ 30 }
@@ -17,7 +14,7 @@ DebugUIManager::DebugUIManager()
 	ClearColor = ImVec4(0.025f, 0.025f, 0.025f, 1.0f);
 }
 
-void DebugUIManager::Startup(HWND hWnd, ID3D11Device* Device, ID3D11DeviceContext* DeviceContext)
+void FDebugUIManager::Startup(HWND hWnd, ID3D11Device* Device, ID3D11DeviceContext* DeviceContext)
 {
 	// ImGui √ ±‚»≠
 	IMGUI_CHECKVERSION();
@@ -32,7 +29,7 @@ void DebugUIManager::Startup(HWND hWnd, ID3D11Device* Device, ID3D11DeviceContex
 	}
 }
 
-void DebugUIManager::Render()
+void FDebugUIManager::Render()
 {
 	BeginFrame();
 
@@ -83,21 +80,21 @@ void DebugUIManager::Render()
 	EndFrame();
 }
 
-void DebugUIManager::Shutdown()
+void FDebugUIManager::Shutdown()
 {
 	ImGui_ImplDX11_Shutdown();
 	ImGui_ImplWin32_Shutdown();
 	ImGui::DestroyContext();
 }
 
-void DebugUIManager::BeginFrame()
+void FDebugUIManager::BeginFrame()
 {
 	ImGui_ImplDX11_NewFrame();
 	ImGui_ImplWin32_NewFrame();
 	ImGui::NewFrame();
 }
 
-void DebugUIManager::EndFrame()
+void FDebugUIManager::EndFrame()
 {
 	ImGui::Render();
 	ImGui_ImplDX11_RenderDrawData(ImGui::GetDrawData());

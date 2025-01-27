@@ -1,7 +1,7 @@
 #pragma once
 
-#include <windows.h>
 #include <functional>
+#include <windows.h>
 
 class FWindow
 {

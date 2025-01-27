@@ -1,17 +1,18 @@
 #pragma once
+
 #include <vector>
 #include <memory>
-#include "URenderer.h"
+#include "FGraphicsDX11Engine.h"
 
-class Entity;
+class IGameObejct;
 
 class Scene
 {
 public:
 	void Initialize();
 	void Update();
-	void Render(URenderer& renderer);
+	void Render(FGraphicsDX11Engine& renderer);
 
 private:
-	std::vector<std::shared_ptr<Entity>> entities;
+	std::vector<std::shared_ptr<IGameObejct>> entities;
 };

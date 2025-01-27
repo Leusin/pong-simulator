@@ -1,11 +1,11 @@
 #pragma once
 
-#include <windows.h>
 #include <d3d11.h>
 #include <functional>
+#include <windows.h>
 #include "imgui/imgui.h"
 
-class DebugUIManager
+class FDebugUIManager
 {
 public:
     ImVec4 ClearColor;
@@ -27,7 +27,7 @@ private:
     bool bShowDemoWindow = false;
 
 public:
-    DebugUIManager();
+    FDebugUIManager();
 
     void Startup(HWND hWnd, ID3D11Device* Device, ID3D11DeviceContext* DeviceContext);
     void Render();

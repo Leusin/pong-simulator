@@ -1,6 +1,6 @@
 #pragma once
 #include <memory>
-#include "URenderer.h"
+#include "FGraphicsDX11Engine.h"
 #include "Scene.h"
 
 class SceneManager
@@ -8,7 +8,7 @@ class SceneManager
 public:
 	void LoadScene(std::shared_ptr<Scene> newScene);
 	void Update();
-	void Render(URenderer& renderer);
+	void Render(FGraphicsDX11Engine& renderer);
 
 private:
 	std::shared_ptr<Scene> currentScene;

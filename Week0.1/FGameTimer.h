@@ -1,13 +1,14 @@
 #pragma once
+
 #include <chrono>
 
 /*
 * chrono 라이브러리를 통해 타이머 구현
 */
-class GameTimer
+class FGameTimer
 {
 public:
-	GameTimer();
+	FGameTimer();
 
 	float GetGameTime() const;
 	float GetDeltaTime() const;

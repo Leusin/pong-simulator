@@ -16,12 +16,12 @@
     <Filter Include="ImGui">
       <UniqueIdentifier>{3d7295dd-9b87-4c70-8859-460258b581a4}</UniqueIdentifier>
     </Filter>
+    <Filter Include="_unused">
+      <UniqueIdentifier>{cc93ba2c-7a86-4799-a672-413b0a59276b}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="main.cpp">
-      <Filter>소스 파일</Filter>
-    </ClCompile>
-    <ClCompile Include="URenderer.cpp">
+    <ClCompile Include="FGraphicsDX11Engine.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
     <ClCompile Include="FVertexSimple.h">
@@ -48,45 +48,37 @@
     <ClCompile Include="imgui\imgui_impl_win32.cpp">
       <Filter>ImGui</Filter>
     </ClCompile>
-    <ClCompile Include="Engine.cpp">
+    <ClCompile Include="FGameEngine.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
     <ClCompile Include="FWindow.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
-    <ClCompile Include="Scene.cpp">
+    <ClCompile Include="FDebugUIManager.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
-    <ClCompile Include="Entity.cpp">
+    <ClCompile Include="FGameTimer.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
-    <ClCompile Include="SceneManager.cpp">
+    <ClCompile Include="FPaddle.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
     <ClCompile Include="InputManager.cpp">
-      <Filter>소스 파일</Filter>
+      <Filter>_unused</Filter>
+    </ClCompile>
+    <ClCompile Include="Scene.cpp">
+      <Filter>_unused</Filter>
+    </ClCompile>
+    <ClCompile Include="SceneManager.cpp">
+      <Filter>_unused</Filter>
     </ClCompile>
     <ClCompile Include="UIManager.cpp">
-      <Filter>소스 파일</Filter>
+      <Filter>_unused</Filter>
     </ClCompile>
-    <ClCompile Include="FClock.cpp">
-      <Filter>소스 파일</Filter>
-    </ClCompile>
-    <ClCompile Include="DebugUIManager.cpp">
-      <Filter>소스 파일</Filter>
-    </ClCompile>
-    <ClCompile Include="GameTimer.cpp">
-      <Filter>소스 파일</Filter>
-    </ClCompile>
-    <ClCompile Include="Paddle.cpp">
-      <Filter>소스 파일</Filter>
-    </ClCompile>
-    <ClCompile Include="Ball.cpp">
-      <Filter>소스 파일</Filter>
-    </ClCompile>
+    <ClCompile Include="main.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="URenderer.h">
+    <ClInclude Include="FGraphicsDX11Engine.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
     <ClInclude Include="imgui\imconfig.h">
@@ -113,43 +105,40 @@
     <ClInclude Include="imgui\imgui_impl_win32.h">
       <Filter>ImGui</Filter>
     </ClInclude>
-    <ClInclude Include="Vertices.h">
+    <ClInclude Include="GeometryData.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
-    <ClInclude Include="Engine.h">
+    <ClInclude Include="FGameEngine.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
     <ClInclude Include="FWindow.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
-    <ClInclude Include="Scene.h">
+    <ClInclude Include="FDebugUIManager.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
-    <ClInclude Include="Entity.h">
+    <ClInclude Include="FGameTimer.h">
       <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="FPaddle.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="IGameObejct.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="Scene.h">
+      <Filter>_unused</Filter>
     </ClInclude>
     <ClInclude Include="SceneManager.h">
-      <Filter>헤더 파일</Filter>
-    </ClInclude>
-    <ClInclude Include="InputManager.h">
-      <Filter>헤더 파일</Filter>
+      <Filter>_unused</Filter>
     </ClInclude>
     <ClInclude Include="UIManager.h">
-      <Filter>헤더 파일</Filter>
+      <Filter>_unused</Filter>
     </ClInclude>
-    <ClInclude Include="FClock.h">
-      <Filter>헤더 파일</Filter>
+    <ClInclude Include="InputManager.h">
+      <Filter>_unused</Filter>
     </ClInclude>
-    <ClInclude Include="DebugUIManager.h">
-      <Filter>헤더 파일</Filter>
-    </ClInclude>
-    <ClInclude Include="GameTimer.h">
-      <Filter>헤더 파일</Filter>
-    </ClInclude>
-    <ClInclude Include="Paddle.h">
-      <Filter>헤더 파일</Filter>
-    </ClInclude>
-    <ClInclude Include="Ball.h">
+    <ClInclude Include="FVector3.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
   </ItemGroup>

@@ -1,7 +1,6 @@
-#include "GameTimer.h"
-#include <windows.h>
+#include "FGameTimer.h"
 
-GameTimer::GameTimer()
+FGameTimer::FGameTimer()
 	: DeltaTime{ -1.0 }
 	, StartTime{ Clock::now() }
 	, BaseTime{ TimePoint() }
@@ -13,19 +12,19 @@ GameTimer::GameTimer()
 {
 }
 
-float GameTimer::GetDeltaTime() const
+float FGameTimer::GetDeltaTime() const
 {
 	return static_cast<float>(DeltaTime);
 }
 
-float GameTimer::GetRunTime() const
+float FGameTimer::GetRunTime() const
 {
 	return std::chrono::duration<float>
 		(Clock::now() - StartTime).count();
 }
 
 // 일시정지 외에 흐른 시간을 반환한다.
-float GameTimer::GetGameTime() const
+float FGameTimer::GetGameTime() const
 {
 	if (bStopped)
 	{
@@ -49,16 +48,17 @@ float GameTimer::GetGameTime() const
 	}
 }
 
-void GameTimer::Reset()
+void FGameTimer::Reset()
 {
 	auto now = Clock::now();
 	BaseTime = now;
 	PrevTime = now;
+	PausedTime = TimePoint();
 	StopTime = TimePoint();
 	bStopped = false;
 }
 
-void GameTimer::Start()
+void FGameTimer::Start()
 {
 	if (bStopped)
 	{
@@ -70,7 +70,7 @@ void GameTimer::Start()
 	}
 }
 
-void GameTimer::Stop()
+void FGameTimer::Stop()
 {
 	if (!bStopped)
 	{
@@ -79,7 +79,7 @@ void GameTimer::Stop()
 	}
 }
 
-void GameTimer::Tick()
+void FGameTimer::Tick()
 {
 	if (bStopped)
 	{

@@ -1,6 +1,6 @@
-﻿#include "URenderer.h"
+﻿#include "FGraphicsDX11Engine.h"
 
-void URenderer::OnResize(int Width, int Height, HWND hWindow)
+void FGraphicsDX11Engine::OnResize(int Width, int Height, HWND hWindow)
 {
     if (SwapChain)
     {
