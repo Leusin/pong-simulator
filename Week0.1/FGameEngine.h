@@ -4,6 +4,7 @@
 #include "FGameTimer.h"
 #include "FGraphicsDX11Engine.h"
 #include "FPaddle.h"
+#include "FBall.h"
 
 class FGameEngine
 {
@@ -26,6 +27,7 @@ private:
 	FDebugUIManager DebugUI;
 	FGameTimer Timer;
 	FPaddle PlayerPaddle;
+	FBall Ball;
 	//InputManager inputManager;
 	//SceneManager sceneManager;
 };

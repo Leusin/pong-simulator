@@ -23,6 +23,7 @@ void FGameEngine::Initialize(HWND InHWnd)
 void FGameEngine::Update()
 {
 	PlayerPaddle.Update(Timer.GetDeltaTime());
+	Ball.Update(Timer.GetDeltaTime());
 
 	DebugUI.DeltaTime = Timer.GetDeltaTime();
 	DebugUI.GameTime = Timer.GetGameTime();
@@ -65,6 +66,7 @@ void FGameEngine::Render()
 	Renderer.PrepareShader();
 
 	PlayerPaddle.Render(Renderer);
+	Ball.Render(Renderer);
 
 	Renderer.ClearColor[0] = DebugUI.ClearColor.x;
 	Renderer.ClearColor[1] = DebugUI.ClearColor.y;

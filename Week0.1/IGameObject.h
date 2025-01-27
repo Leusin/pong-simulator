@@ -2,7 +2,7 @@
 
 #include "FGraphicsDX11Engine.h"
 
-class IGameObejct
+class IGameObject
 {
 public:
 	virtual void Update(float DeltaTime) abstract;

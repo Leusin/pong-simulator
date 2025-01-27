@@ -4,14 +4,14 @@
 
 #include "FVertexSimple.h"
 
-FVertexSimple GTriangleVertices[] =
+__declspec(selectany) FVertexSimple GTriangleVertices[] =
 {
 	{  0.0f,  1.0f, 0.0f,  1.0f, 0.0f, 0.0f, 1.0f }, // Top vertex (red)
 	{  1.0f, -1.0f, 0.0f,  0.0f, 1.0f, 0.0f, 1.0f }, // Bottom-right vertex (green)
 	{ -1.0f, -1.0f, 0.0f,  0.0f, 0.0f, 1.0f, 1.0f }  // Bottom-left vertex (blue)
 };
 
-FVertexSimple GCubeVertices[] =
+__declspec(selectany) FVertexSimple GCubeVertices[] =
 {
 	// Front face (Z+)
 	{ -0.5f, -0.5f,  0.5f,  1.0f, 0.0f, 0.0f, 1.0f }, // Bottom-left (red)
@@ -22,7 +22,18 @@ FVertexSimple GCubeVertices[] =
 	{  0.5f, -0.5f,  0.5f,  0.0f, 1.0f, 0.0f, 1.0f }, // Bottom-right (green)
 };
 
-FVertexSimple GSphereVertices[] = 
+__declspec(selectany) FVertexSimple GPaddleVertices[] =
+{
+	// Front face (Z+)
+	{ -0.5f, -0.1f,  0.5f,  1.0f, 0.0f, 0.0f, 1.0f }, // Bottom-left (red)
+	{ -0.5f,  0.1f,  0.5f,  1.0f, 1.0f, 0.0f, 1.0f }, // Top-left (yellow)
+	{  0.5f, -0.1f,  0.5f,  0.0f, 1.0f, 0.0f, 1.0f }, // Bottom-right (green)
+	{ -0.5f,  0.1f,  0.5f,  1.0f, 1.0f, 0.0f, 1.0f }, // Top-left (yellow)
+	{  0.5f,  0.1f,  0.5f,  0.0f, 0.0f, 1.0f, 1.0f }, // Top-right (blue)
+	{  0.5f, -0.1f,  0.5f,  0.0f, 1.0f, 0.0f, 1.0f }, // Bottom-right (green)
+};
+
+__declspec(selectany) FVertexSimple GSphereVertices[] =
 {
 	{ 0.000000f, 1.000000f, 0.000000f, 0.500000f, 1.000000f, 0.500000f, 1.000000f },
 	{ 0.156434f, 0.987688f, 0.000000f, 0.578217f, 0.993844f, 0.500000f, 1.000000f },

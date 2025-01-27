@@ -1,44 +1,65 @@
-#include "FPaddle.h"
+#include "FBall.h"
 #include "GeometryData.h"
 
-void FPaddle::Update(float DeltaTime)
+FBall::FBall()
 {
+	UINT numVertices =
+		sizeof(GSphereVertices) / sizeof(FVertexSimple);
+
+	for (UINT i = 0; i < numVertices; ++i)
+	{
+		GSphereVertices[i].x *= Scale;
+		GSphereVertices[i].y *= Scale;
+		GSphereVertices[i].z *= Scale;
+	}
+
+	Velocity.x = ((float)(rand() % 100 - 50)) * Speed;
+	Velocity.y = ((float)(rand() % 100 - 50)) * Speed;
+}
+
+void FBall::Update(float DeltaTime)
+{
+	Offset.x += Velocity.x * DeltaTime;
+	Offset.y += Velocity.y * DeltaTime;
+
 	const float leftBorder = -1.0f;
 	const float rightBorder = 1.0f;
 	const float topBorder = -1.0f;
 	const float bottomBorder = 1.0f;
 
-	if (GetAsyncKeyState(VK_LEFT) & 0x8000)
+	float RenderRadius = Radius * Scale;
+	if (Offset.x < leftBorder + RenderRadius)
 	{
-		Offset.x -= Speed * DeltaTime;
+		Offset.x = leftBorder + RenderRadius;
+		Velocity.x *= -1.0f;
 	}
-
-	if (GetAsyncKeyState(VK_RIGHT) & 0x8000)
+	if (Offset.x > rightBorder - RenderRadius)
 	{
-		Offset.x += Speed * DeltaTime;
+		Offset.x = rightBorder - RenderRadius;
+		Velocity.x *= -1.0f;
 	}
-
-	if (Offset.x < leftBorder + HelfWidth)
+	if (Offset.y < topBorder + RenderRadius)
 	{
-		Offset.x = leftBorder + HelfWidth;
+		Offset.y = topBorder + RenderRadius;
+		Velocity.y *= -1.0f;
 	}
-	if (Offset.x > rightBorder - HelfWidth)
+	if (Offset.y > bottomBorder - RenderRadius)
 	{
-		Offset.x = rightBorder - HelfWidth;
+		Offset.y = bottomBorder - RenderRadius;
+		Velocity.y *= -1.0f;
 	}
 }
 
 // 매우 부적절하지만 당분간 구조의 단순화를 위해 
 // 매 프레임마다 버퍼를 생성했다 삭제
-void FPaddle::Render(FGraphicsDX11Engine& Renderer)
+void FBall::Render(FGraphicsDX11Engine& Renderer)
 {
-	ID3D11Buffer* VertexBuffer = 
-		Renderer.CreateVertexBuffer(GPaddleVertices,
-			sizeof(GPaddleVertices));
-	
-	INT NumVerticesTriangle = 
-		sizeof(GPaddleVertices) / sizeof(FVertexSimple);
+	ID3D11Buffer* VertexBuffer =
+		Renderer.CreateVertexBuffer(GSphereVertices,
+			sizeof(GSphereVertices));
 
+	INT NumVerticesTriangle =
+		sizeof(GSphereVertices) / sizeof(FVertexSimple);
 	
 	ID3D11Buffer* ConstantBuffer = nullptr;
 	D3D11_BUFFER_DESC constantbufferdesc = {};
@@ -49,18 +70,21 @@ void FPaddle::Render(FGraphicsDX11Engine& Renderer)
 	Renderer.Device->CreateBuffer(&constantbufferdesc, nullptr, &ConstantBuffer);
 
 	D3D11_MAPPED_SUBRESOURCE constantbufferMSR;
-	HRESULT hr = Renderer.DeviceContext->Map(
+
+	HRESULT hr;
+
+	hr = Renderer.DeviceContext->Map(
 		ConstantBuffer,
 		0,
 		D3D11_MAP_WRITE_DISCARD,
 		0,
 		&constantbufferMSR);
-	FGraphicsDX11Engine::FConstants* constants =
+	FGraphicsDX11Engine::FConstants* constants = 
 		(FGraphicsDX11Engine::FConstants*)constantbufferMSR.pData;
 	constants->Offset = Offset;
 
 	Renderer.DeviceContext->VSSetConstantBuffers(0, 1, &ConstantBuffer);
-	
+
 	Renderer.RenderPrimitive(VertexBuffer, NumVerticesTriangle);
 
 	Renderer.DeviceContext->Unmap(ConstantBuffer, 0);

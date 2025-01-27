@@ -4,7 +4,7 @@
 #include <memory>
 #include "FGraphicsDX11Engine.h"
 
-class IGameObejct;
+class IGameObject;
 
 class Scene
 {
@@ -14,5 +14,5 @@ public:
 	void Render(FGraphicsDX11Engine& renderer);
 
 private:
-	std::vector<std::shared_ptr<IGameObejct>> entities;
+	std::vector<std::shared_ptr<IGameObject>> entities;
 };

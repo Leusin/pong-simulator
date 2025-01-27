@@ -1,9 +1,8 @@
 #pragma once
 
 #include "IGameObject.h"
-#include "FGraphicsDX11Engine.h"
 
-class FPaddle :
+class FBall :
     public IGameObject
 {
 public:
@@ -11,8 +10,11 @@ public:
 	virtual void Render(FGraphicsDX11Engine& Renderer) override;
 
 public:
-	FVector3 Offset = { 1.0f , 1.0f, 1.0f };
-	float HelfWidth = 0.5f; // 하드 코딩
-	float Speed = 1.0f;
-};
+	FBall();
 
+	FVector3 Offset = { 0.0f , 0.0f, 0.0f };
+	FVector3 Velocity = { 0.0f , 0.0f, 0.0f };
+	float Speed = 0.05f;
+	float Radius = 1.0f; // 하드 코딩
+	float Scale = 0.1f;
+};

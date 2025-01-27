@@ -76,6 +76,9 @@
       <Filter>_unused</Filter>
     </ClCompile>
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="FBall.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="FGraphicsDX11Engine.h">
@@ -123,7 +126,7 @@
     <ClInclude Include="FPaddle.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
-    <ClInclude Include="IGameObejct.h">
+    <ClInclude Include="IGameObject.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
     <ClInclude Include="Scene.h">
@@ -139,6 +142,9 @@
       <Filter>_unused</Filter>
     </ClInclude>
     <ClInclude Include="FVector3.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="FBall.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
   </ItemGroup>

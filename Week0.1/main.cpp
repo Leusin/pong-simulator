@@ -5,7 +5,7 @@
 
 int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_  HINSTANCE hPrevInstance, _In_  LPSTR lpCmdLine, _In_ int nShowCmd)
 {
-	FWindow window(hInstance, L"My Game Engine", 1280, 1024);
+	FWindow window(hInstance, L"My Game Engine", 1024, 1024);
 
 	FGameEngine engine;
 	engine.Initialize(window.GetWindowHandle());
