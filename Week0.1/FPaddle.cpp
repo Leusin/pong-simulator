@@ -18,13 +18,13 @@ void FPaddle::Update(float DeltaTime)
 		Offset.x += Speed * DeltaTime;
 	}
 
-	if (Offset.x < leftBorder + HelfWidth)
+	if (Offset.x < leftBorder + HalfWidth)
 	{
-		Offset.x = leftBorder + HelfWidth;
+		Offset.x = leftBorder + HalfWidth;
 	}
-	if (Offset.x > rightBorder - HelfWidth)
+	if (Offset.x > rightBorder - HalfWidth)
 	{
-		Offset.x = rightBorder - HelfWidth;
+		Offset.x = rightBorder - HalfWidth;
 	}
 }
 

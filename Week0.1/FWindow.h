@@ -1,5 +1,8 @@
 #pragma once
 
+// windows.h에 정의된 min, max 매크로를 사용하지 않음
+#define NOMINMAX
+
 #include <functional>
 #include <windows.h>
 

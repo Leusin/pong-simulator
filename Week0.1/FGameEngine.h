@@ -18,7 +18,6 @@ public:
 	
 private:
 	ImVec4 ClearColor = ImVec4(0.025f, 0.025f, 0.025f, 1.0f);
-	FVector3 Offset = {0.f, 0.f, 0.f};
 	bool bShowDemoWindow = false;
 
 private:

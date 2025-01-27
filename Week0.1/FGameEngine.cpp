@@ -1,5 +1,6 @@
 #include "FGameEngine.h"
 #include <thread>
+#include "CollisionManager.h"
 
 void FGameEngine::Initialize(HWND InHWnd)
 {
@@ -17,7 +18,7 @@ void FGameEngine::Initialize(HWND InHWnd)
 	DebugUI.TimeStartCallback = [this]() { Timer.Start(); };
 	DebugUI.TimeStopCallback = [this]() { Timer.Stop(); };
 
-	PlayerPaddle.Offset.y = -0.5f;
+	PlayerPaddle.Offset.y = -0.8f;
 }
 
 void FGameEngine::Update()
@@ -25,38 +26,44 @@ void FGameEngine::Update()
 	PlayerPaddle.Update(Timer.GetDeltaTime());
 	Ball.Update(Timer.GetDeltaTime());
 
-	DebugUI.DeltaTime = Timer.GetDeltaTime();
-	DebugUI.GameTime = Timer.GetGameTime();
-	DebugUI.RunningTime = Timer.GetRunTime();
+	// 충돌체크
+
+	CollisionManager cm;
+	DebugUI.bOnCollide = 
+		cm.CheckBallPaddle(Ball, PlayerPaddle);
 
 	Timer.Tick();
 
 	// LimitFrameRate
-	int targetFPS = DebugUI.TargetFPS;
-	double targetFrameTime = 1000.0 / targetFPS;
+	int TargetFPS = DebugUI.TargetFPS;
+	double TargetFrameTime = 1000.0 / TargetFPS;
 	// DeltaTime을 밀리초로 변환
-	double elapsedTime = Timer.GetDeltaTime() * 1000.0;
-	if (elapsedTime < targetFrameTime)
+	double ElapsedTime = Timer.GetDeltaTime() * 1000.0;
+	if (ElapsedTime < TargetFrameTime)
 	{
-		auto timeToSleep = targetFrameTime - elapsedTime;
+		auto timeToSleep = TargetFrameTime - ElapsedTime;
 		std::this_thread::sleep_for(
 			std::chrono::milliseconds(
 				static_cast<int>(timeToSleep)));
 	}
 
-	// CalculateFrameState
-	static int frameCount = 0;
-	static float timeElapsed = 0.f;
+	DebugUI.DeltaTime = Timer.GetDeltaTime();
+	DebugUI.GameTime = Timer.GetGameTime();
+	DebugUI.RunningTime = Timer.GetRunTime();
 
-	frameCount++;
-	if (Timer.GetGameTime() - timeElapsed >= 1.0f)
+	// CalculateFrameState
+	static int FrameCount = 0;
+	static float TimeElapsed = 0.f;
+
+	FrameCount++;
+	if (Timer.GetGameTime() - TimeElapsed >= 1.0f)
 	{
-		float fps = (float)frameCount;
+		float fps = (float)FrameCount;
 		float mspf = 1000.0f / fps;
 		DebugUI.FPS = fps;
 		DebugUI.MFPS = mspf;
-		frameCount = 0;
-		timeElapsed += 1.0f;
+		FrameCount = 0;
+		TimeElapsed += 1.0f;
 	}
 }
 
@@ -65,18 +72,18 @@ void FGameEngine::Render()
 	Renderer.Prepare();
 	Renderer.PrepareShader();
 
-	PlayerPaddle.Render(Renderer);
 	Ball.Render(Renderer);
+	PlayerPaddle.Render(Renderer);
 
 	Renderer.ClearColor[0] = DebugUI.ClearColor.x;
 	Renderer.ClearColor[1] = DebugUI.ClearColor.y;
 	Renderer.ClearColor[2] = DebugUI.ClearColor.z;
 	Renderer.ClearColor[3] = DebugUI.ClearColor.w;
-	
+
 	DebugUI.Render();
 
 	Renderer.SwapBuffer();
-	
+
 }
 
 void FGameEngine::Shutdown()

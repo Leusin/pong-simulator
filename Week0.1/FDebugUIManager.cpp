@@ -3,17 +3,6 @@
 #include "imgui/imgui_impl_dx11.h"
 #include "imgui/imgui_impl_win32.h"
 
-FDebugUIManager::FDebugUIManager()
-	: DeltaTime{0.0f}
-	, GameTime{0.0f}
-	, TargetFPS{ 30 }
-	, TimeStopCallback{ nullptr }
-	, TimeStartCallback{ nullptr }
-	, TimeResetCallback{ nullptr }
-{
-	ClearColor = ImVec4(0.025f, 0.025f, 0.025f, 1.0f);
-}
-
 void FDebugUIManager::Startup(HWND hWnd, ID3D11Device* Device, ID3D11DeviceContext* DeviceContext)
 {
 	// ImGui √ ±‚»≠
@@ -74,6 +63,8 @@ void FDebugUIManager::Render()
 			TimeResetCallback();
 		}
 	}
+
+	ImGui::Checkbox("On Collide", &bOnCollide);
 
 	ImGui::End();
 

@@ -8,9 +8,9 @@
 class FDebugUIManager
 {
 public:
-    ImVec4 ClearColor;
+    ImVec4 ClearColor = { 0.025f, 0.025f, 0.025f, 1.0f };
     
-    int TargetFPS;
+    int TargetFPS = 60;
 
     float FPS;
     float MFPS;
@@ -18,17 +18,17 @@ public:
     float GameTime;
     float RunningTime;
 
-    std::function<void()> TimeStopCallback;
-    std::function<void()> TimeStartCallback;
-    std::function<void()> TimeResetCallback;
+    std::function<void()> TimeStopCallback = nullptr;
+    std::function<void()> TimeStartCallback = nullptr;
+    std::function<void()> TimeResetCallback = nullptr;
+
+    bool bOnCollide;
 
 private:
     HWND hWnd;
     bool bShowDemoWindow = false;
 
 public:
-    FDebugUIManager();
-
     void Startup(HWND hWnd, ID3D11Device* Device, ID3D11DeviceContext* DeviceContext);
     void Render();
     void Shutdown();
