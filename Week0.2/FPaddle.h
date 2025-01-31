@@ -12,8 +12,11 @@ public:
 
 public:
 	FVector3 Offset = { 0.0f , 0.0f, 0.0f };
-	float HalfWidth = 0.5f; // 하드 코딩
-	float HalfHeight = 0.1f; // 하드 코딩
+	float HalfWidth = 0.05f; // 하드 코딩
+	float HalfHeight = 0.2f; // 하드 코딩
 	float Speed = 1.0f;
+
+	bool bMoveUp;
+	bool bMoveDown;
 };
 

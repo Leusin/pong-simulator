@@ -7,17 +7,18 @@ void FPaddle::Update(float DeltaTime)
 	const float rightBorder = 1.0f;
 	const float topBorder = -1.0f;
 	const float bottomBorder = 1.0f;
-
-	if (GetAsyncKeyState(VK_LEFT) & 0x8000)
+	
+	if (bMoveUp)
 	{
-		Offset.x -= Speed * DeltaTime;
+		Offset.y += Speed * DeltaTime;
 	}
 
-	if (GetAsyncKeyState(VK_RIGHT) & 0x8000)
+	if (bMoveDown)
 	{
-		Offset.x += Speed * DeltaTime;
+		Offset.y -= Speed * DeltaTime;
 	}
 
+	// 경계면 처리
 	if (Offset.x < leftBorder + HalfWidth)
 	{
 		Offset.x = leftBorder + HalfWidth;
@@ -25,6 +26,14 @@ void FPaddle::Update(float DeltaTime)
 	if (Offset.x > rightBorder - HalfWidth)
 	{
 		Offset.x = rightBorder - HalfWidth;
+	}
+	if (Offset.y < topBorder + HalfHeight)
+	{
+		Offset.y = topBorder + HalfHeight;
+	}
+	if (Offset.y > bottomBorder - HalfHeight)
+	{
+		Offset.y = bottomBorder - HalfHeight;
 	}
 }
 

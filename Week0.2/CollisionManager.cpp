@@ -44,8 +44,8 @@ bool CollisionManager::CheckBallPaddle(FBall & InBall, const FPaddle& InPaddle)
 	case 3:
 	case 5:
 	{
-		float distX = (float)fabs(InBall.Offset.x - InPaddle.Offset.x);
-		if (distX <= InBall.Radius * InBall.Scale + InPaddle.HalfHeight)
+		float DistX = (float)fabs(InBall.Offset.x - InPaddle.Offset.x);
+		if (DistX <= InBall.Radius * InBall.Scale + InPaddle.HalfWidth)
 		{
 			InBall.Velocity.x *= -1.0f;
 			if (InBall.Offset.x < InPaddle.Offset.x) 

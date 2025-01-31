@@ -18,19 +18,66 @@ void FGameEngine::Initialize(HWND InHWnd)
 	DebugUI.TimeStartCallback = [this]() { Timer.Start(); };
 	DebugUI.TimeStopCallback = [this]() { Timer.Stop(); };
 
-	PlayerPaddle.Offset.y = -0.8f;
+	PaddleLeft.Offset.x = -0.95f;
+	PaddleRight.Offset.x = 0.95f;
 }
 
 void FGameEngine::Update()
 {
-	PlayerPaddle.Update(Timer.GetDeltaTime());
+	// W 키
+	if (GetAsyncKeyState(0x57) & 0x8000)
+	{
+		PaddleLeft.bMoveUp = true;
+	}
+	else
+	{
+		PaddleLeft.bMoveUp = false;
+	}
+
+	// S 키
+	if (GetAsyncKeyState(0x53) & 0x8000)
+	{
+		PaddleLeft.bMoveDown = true;
+	}
+	else
+	{
+		PaddleLeft.bMoveDown = false;
+	}
+
+	if (GetAsyncKeyState(VK_UP) & 0x8000)
+	{
+		PaddleRight.bMoveUp = true;
+	}
+	else
+	{
+		PaddleRight.bMoveUp = false;
+	}
+
+	if (GetAsyncKeyState(VK_DOWN) & 0x8000)
+	{
+		PaddleRight.bMoveDown = true;
+	}
+	else
+	{
+		PaddleRight.bMoveDown = false;
+	}
+
+	PaddleLeft.Update(Timer.GetDeltaTime());
+	PaddleRight.Update(Timer.GetDeltaTime());
+
 	Ball.Update(Timer.GetDeltaTime());
 
 	// 충돌체크
 
 	CollisionManager cm;
-	DebugUI.bOnCollide = 
-		cm.CheckBallPaddle(Ball, PlayerPaddle);
+	DebugUI.bOnCollide =
+		cm.CheckBallPaddle(Ball, PaddleRight);
+
+	if (DebugUI.bOnCollide == false)
+	{
+		DebugUI.bOnCollide =
+			cm.CheckBallPaddle(Ball, PaddleLeft);
+	}
 
 	Timer.Tick();
 
@@ -73,7 +120,8 @@ void FGameEngine::Render()
 	Renderer.PrepareShader();
 
 	Ball.Render(Renderer);
-	PlayerPaddle.Render(Renderer);
+	PaddleLeft.Render(Renderer);
+	PaddleRight.Render(Renderer);
 
 	Renderer.ClearColor[0] = DebugUI.ClearColor.x;
 	Renderer.ClearColor[1] = DebugUI.ClearColor.y;

@@ -25,7 +25,8 @@ private:
 	FGraphicsDX11Engine Renderer;
 	FDebugUIManager DebugUI;
 	FGameTimer Timer;
-	FPaddle PlayerPaddle;
+	FPaddle PaddleLeft;
+	FPaddle PaddleRight;
 	FBall Ball;
 	//InputManager inputManager;
 	//SceneManager sceneManager;
