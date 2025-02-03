@@ -49,19 +49,7 @@
     <ClCompile Include="FWindow.cpp">
       <Filter>Sources</Filter>
     </ClCompile>
-    <ClCompile Include="InputManager.cpp">
-      <Filter>Sources</Filter>
-    </ClCompile>
     <ClCompile Include="main.cpp">
-      <Filter>Sources</Filter>
-    </ClCompile>
-    <ClCompile Include="Scene.cpp">
-      <Filter>Sources</Filter>
-    </ClCompile>
-    <ClCompile Include="SceneManager.cpp">
-      <Filter>Sources</Filter>
-    </ClCompile>
-    <ClCompile Include="UIManager.cpp">
       <Filter>Sources</Filter>
     </ClCompile>
   </ItemGroup>
@@ -121,19 +109,7 @@
       <Filter>Headers</Filter>
     </ClInclude>
     <ClInclude Include="imgui\imconfig.h">
-      <Filter>Headers</Filter>
-    </ClInclude>
-    <ClInclude Include="InputManager.h">
-      <Filter>Headers</Filter>
-    </ClInclude>
-    <ClInclude Include="Scene.h">
-      <Filter>Headers</Filter>
-    </ClInclude>
-    <ClInclude Include="SceneManager.h">
-      <Filter>Headers</Filter>
-    </ClInclude>
-    <ClInclude Include="UIManager.h">
-      <Filter>Headers</Filter>
+      <Filter>ImGui</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
