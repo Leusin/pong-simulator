@@ -27,14 +27,12 @@ void FDebugUIManager::Render()
 		ImGui::ShowDemoWindow(&bShowDemoWindow);
 	}
 
-	ImGui::Begin("Jungle Property Window");
-	ImGui::Text("Hello, ImGui!");
+	ImGui::Begin("Debug Window");
 	if (ImGui::Button("Quit this app"))
 	{
 		PostMessage(hWnd, WM_QUIT, 0, 0);
 	}
-	ImGui::Checkbox("Demo Window", &bShowDemoWindow);
-	ImGui::ColorEdit3("clear color", (float*)&ClearColor); // Edit 3 floats representing a color
+	ImGui::ColorEdit3("clear color", (float*)&ClearColor);
 
 	ImGui::InputInt("Target FPS", &TargetFPS);
 
